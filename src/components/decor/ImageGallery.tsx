@@ -1,81 +1,92 @@
-import { Trash2 } from 'lucide-react'
+import { MonitorPlay, Trash2 } from 'lucide-react'
 import type { UploadedImage } from '../../types/decor'
 
 type ImageGalleryProps = {
   images: UploadedImage[]
-  activeFrameId: string | null
+  activeImageId?: string | null
   onSelectImage: (imageId: string) => void
   onRemoveImage: (imageId: string) => void
-  onDragStartImage: (imageId: string | null) => void
 }
 
 export default function ImageGallery({
   images,
-  activeFrameId,
+  activeImageId,
   onSelectImage,
   onRemoveImage,
-  onDragStartImage,
 }: ImageGalleryProps) {
   if (images.length === 0) {
     return (
-      <div className="decor-panel mt-4">
-        <p className="decor-kicker mb-1">Gallery</p>
-        <p className="m-0 text-sm text-[var(--sea-ink-soft)]">
-          Uploaded artwork will appear here. Select an image to place it on the
-          active frame.
+      <section className="glass-card">
+        <p className="section-kicker">Gallery</p>
+        <h2 className="section-title">Your collection</h2>
+        <p className="empty-copy">
+          Uploaded artwork appears here. Select a piece to put it on the wall.
         </p>
-      </div>
+      </section>
     )
   }
 
   return (
-    <div className="decor-panel mt-4">
-      <p className="decor-kicker mb-1">Gallery</p>
-      <h3 className="m-0 mb-3 text-sm font-semibold text-[var(--sea-ink)]">
-        Your collection
-      </h3>
+    <section className="glass-card">
+      <div className="mb-4">
+        <p className="section-kicker">Gallery</p>
+        <h2 className="section-title">Your collection</h2>
+      </div>
 
-      <ul className="gallery-grid m-0 grid list-none grid-cols-2 gap-3 p-0 sm:grid-cols-3 lg:grid-cols-2">
-        {images.map((image) => (
-          <li key={image.id} className="group relative">
-            <button
-              type="button"
-              draggable
-              onDragStart={() => onDragStartImage(image.id)}
-              onDragEnd={() => onDragStartImage(null)}
-              onClick={() => onSelectImage(image.id)}
-              disabled={!activeFrameId}
-              title={
-                activeFrameId
-                  ? `Assign to active frame`
-                  : 'Select a frame first'
-              }
-              className="gallery-thumb block w-full overflow-hidden rounded-xl border border-[var(--line)] bg-[var(--surface)] p-0 transition hover:-translate-y-0.5 hover:border-[var(--decor-accent-soft)] disabled:cursor-not-allowed disabled:opacity-50"
-            >
-              <img
-                src={image.dataUrl}
-                alt={image.name}
-                className="aspect-square w-full object-cover"
-              />
-              <span className="block truncate px-2 py-1.5 text-left text-[0.68rem] font-medium text-[var(--sea-ink-soft)]">
-                {image.name}
-              </span>
-            </button>
+      <ul className="gallery-grid">
+        {images.map((image) => {
+          const isActive = activeImageId === image.id
 
-            <button
-              type="button"
-              aria-label={`Remove ${image.name}`}
-              onClick={(event) => {
-                event.stopPropagation()
-                onRemoveImage(image.id)
-              }}
-              className="absolute top-1.5 right-1.5 rounded-lg bg-black/55 p-1.5 text-white opacity-0 transition group-hover:opacity-100 focus-visible:opacity-100"
-            >
-              <Trash2 className="h-3.5 w-3.5" />
-            </button>
-          </li>
-        ))}
+          return (
+            <li key={image.id} className={`gallery-card ${isActive ? 'is-on-wall' : ''}`}>
+              <button
+                type="button"
+                onClick={() => onSelectImage(image.id)}
+                title="Display on frame"
+                className="gallery-card__media"
+              >
+                <img src={image.dataUrl} alt={image.name} />
+                {isActive && (
+                  <span className="on-wall-pill">
+                    <span className="on-wall-pill__dot" />
+                    On Wall
+                  </span>
+                )}
+              </button>
+
+              <div className="gallery-card__meta">
+                <p className="gallery-card__name">{image.name}</p>
+                <div className="gallery-card__actions">
+                  <button
+                    type="button"
+                    className="icon-btn"
+                    aria-label={`Display ${image.name}`}
+                    onClick={() => onSelectImage(image.id)}
+                  >
+                    <MonitorPlay className="h-4 w-4" strokeWidth={1.75} />
+                  </button>
+                  <button
+                    type="button"
+                    className="icon-btn icon-btn--danger"
+                    aria-label={`Remove ${image.name}`}
+                    onClick={() => {
+                      if (
+                        window.confirm(
+                          `Remove “${image.name}” from your library?`,
+                        )
+                      ) {
+                        onRemoveImage(image.id)
+                      }
+                    }}
+                  >
+                    <Trash2 className="h-4 w-4" strokeWidth={1.75} />
+                  </button>
+                </div>
+              </div>
+            </li>
+          )
+        })}
       </ul>
-    </div>
+    </section>
   )
 }
