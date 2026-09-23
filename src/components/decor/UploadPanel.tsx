@@ -1,35 +1,33 @@
 import { useRef, useState } from 'react'
-import { ImagePlus } from 'lucide-react'
+import { ImagePlus, LoaderCircle } from 'lucide-react'
 
 type UploadPanelProps = {
   onUpload: (files: FileList | File[]) => void
-  activeFrameLabel: string | null
   imageCount: number
+  isUploading?: boolean
 }
 
 export default function UploadPanel({
   onUpload,
-  activeFrameLabel,
   imageCount,
+  isUploading = false,
 }: UploadPanelProps) {
   const inputRef = useRef<HTMLInputElement>(null)
   const [isDragging, setIsDragging] = useState(false)
 
   const handleFiles = (files: FileList | null) => {
-    if (!files?.length) return
+    if (!files?.length || isUploading) return
     onUpload(files)
   }
 
   return (
-    <div className="decor-panel">
-      <div className="mb-3 flex items-start justify-between gap-3">
+    <section className="glass-card">
+      <div className="mb-4 flex items-start justify-between gap-3">
         <div>
-          <p className="decor-kicker mb-1">Upload</p>
-          <h2 className="m-0 text-lg font-semibold text-[var(--sea-ink)]">
-            Art library
-          </h2>
+          <p className="section-kicker">Library</p>
+          <h2 className="section-title">Upload artwork</h2>
         </div>
-        <span className="rounded-full border border-[var(--chip-line)] bg-[var(--chip-bg)] px-2.5 py-1 text-xs font-semibold text-[var(--sea-ink-soft)]">
+        <span className="count-pill">
           {imageCount} {imageCount === 1 ? 'piece' : 'pieces'}
         </span>
       </div>
@@ -37,13 +35,16 @@ export default function UploadPanel({
       <div
         role="button"
         tabIndex={0}
+        aria-busy={isUploading}
         onKeyDown={(event) => {
           if (event.key === 'Enter' || event.key === ' ') {
             event.preventDefault()
-            inputRef.current?.click()
+            if (!isUploading) inputRef.current?.click()
           }
         }}
-        onClick={() => inputRef.current?.click()}
+        onClick={() => {
+          if (!isUploading) inputRef.current?.click()
+        }}
         onDragEnter={(event) => {
           event.preventDefault()
           setIsDragging(true)
@@ -61,35 +62,40 @@ export default function UploadPanel({
           setIsDragging(false)
           handleFiles(event.dataTransfer.files)
         }}
-        className={`upload-dropzone flex cursor-pointer flex-col items-center justify-center gap-2 rounded-2xl border-2 border-dashed px-4 py-8 text-center transition ${isDragging ? 'border-[var(--decor-accent)] bg-[rgba(196,149,106,0.12)]' : 'border-[var(--line)] bg-[var(--surface)] hover:border-[var(--decor-accent-soft)]'}`}
+        className={`upload-zone ${isDragging ? 'is-dragging' : ''} ${isUploading ? 'is-uploading' : ''}`}
       >
-        <ImagePlus className="h-8 w-8 text-[var(--decor-accent)]" strokeWidth={1.5} />
-        <p className="m-0 text-sm font-semibold text-[var(--sea-ink)]">
-          Drop JPG or PNG here
-        </p>
-        <p className="m-0 text-xs text-[var(--sea-ink-soft)]">
-          or click to browse · max 8MB each
-        </p>
+        {isUploading ? (
+          <>
+            <LoaderCircle
+              className="upload-zone__icon upload-zone__icon--spin"
+              strokeWidth={1.5}
+            />
+            <p className="upload-zone__title">Uploading artwork…</p>
+            <p className="upload-zone__hint">Saving to your library</p>
+          </>
+        ) : (
+          <>
+            <ImagePlus className="upload-zone__icon" strokeWidth={1.5} />
+            <p className="upload-zone__title">Drop artwork here</p>
+            <p className="upload-zone__hint">
+              or click to browse · JPG, PNG, WebP · max 20MB
+            </p>
+          </>
+        )}
       </div>
 
       <input
         ref={inputRef}
         type="file"
-        accept="image/jpeg,image/png,image/jpg"
+        accept="image/jpeg,image/png,image/jpg,image/webp,image/gif,image/*"
         multiple
+        disabled={isUploading}
         className="sr-only"
         onChange={(event) => {
           handleFiles(event.target.files)
           event.target.value = ''
         }}
       />
-
-      {activeFrameLabel && (
-        <p className="mt-3 mb-0 rounded-xl bg-[rgba(196,149,106,0.12)] px-3 py-2 text-xs text-[var(--sea-ink-soft)]">
-          Assigning to{' '}
-          <strong className="text-[var(--sea-ink)]">{activeFrameLabel}</strong>
-        </p>
-      )}
-    </div>
+    </section>
   )
 }
