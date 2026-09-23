@@ -1,6 +1,11 @@
-export type FrameState = {
-  imageId: string | null
-}
+export type TransitionEffect =
+  | 'crossfade'
+  | 'zoom'
+  | 'slide'
+  | 'blur'
+  | 'instant'
+
+export type TransitionSpeed = 'slow' | 'normal' | 'fast'
 
 export type UploadedImage = {
   id: string
@@ -12,35 +17,23 @@ export type UploadedImage = {
 }
 
 export type DecorState = {
-  frames: Record<string, FrameState>
-  activeFrameId: string | null
+  activeImageId: string | null
   uploadedImages: UploadedImage[]
+  transitionEffect: TransitionEffect
+  transitionSpeed: TransitionSpeed
 }
 
-export type FrameDefinition = {
-  id: string
-  label: string
+export const TRANSITION_DURATIONS: Record<TransitionSpeed, number> = {
+  slow: 2200,
+  normal: 1200,
+  fast: 600,
 }
-
-/** Reference living room image (1024×723) */
-export const SCENE_BACKGROUND = '/living-room-scene.png'
-
-export const SCENE_ASPECT = 1024 / 723
-
-export const FRAME_DEFINITIONS: FrameDefinition[] = [
-  { id: 'frame1', label: 'Left' },
-  { id: 'frame2', label: 'Center' },
-  { id: 'frame3', label: 'Right' },
-]
 
 export function createInitialDecorState(): DecorState {
-  const frames = Object.fromEntries(
-    FRAME_DEFINITIONS.map((frame) => [frame.id, { imageId: null }]),
-  )
-
   return {
-    frames,
-    activeFrameId: FRAME_DEFINITIONS[0]?.id ?? null,
+    activeImageId: null,
     uploadedImages: [],
+    transitionEffect: 'crossfade',
+    transitionSpeed: 'normal',
   }
 }
