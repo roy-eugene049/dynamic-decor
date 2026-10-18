@@ -9,48 +9,114 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as AppRouteImport } from './routes/app'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AppRouteImport } from './routes/app'
+import { Route as ApiDeleteRouteImport } from './routes/api/delete'
+import { Route as ApiStateRouteImport } from './routes/api/state'
+import { Route as ApiUploadRouteImport } from './routes/api/upload'
+import { Route as UploadsFilenameRouteImport } from './routes/uploads/$filename'
 
+const IndexRoute = IndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AppRoute = AppRouteImport.update({
   id: '/app',
   path: '/app',
   getParentRoute: () => rootRouteImport,
 } as any)
-const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
+const ApiDeleteRoute = ApiDeleteRouteImport.update({
+  id: '/api/delete',
+  path: '/api/delete',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiStateRoute = ApiStateRouteImport.update({
+  id: '/api/state',
+  path: '/api/state',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiUploadRoute = ApiUploadRouteImport.update({
+  id: '/api/upload',
+  path: '/api/upload',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const UploadsFilenameRoute = UploadsFilenameRouteImport.update({
+  id: '/uploads/$filename',
+  path: '/uploads/$filename',
   getParentRoute: () => rootRouteImport,
 } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/app': typeof AppRoute
+  '/api/delete': typeof ApiDeleteRoute
+  '/api/state': typeof ApiStateRoute
+  '/api/upload': typeof ApiUploadRoute
+  '/uploads/$filename': typeof UploadsFilenameRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/app': typeof AppRoute
+  '/api/delete': typeof ApiDeleteRoute
+  '/api/state': typeof ApiStateRoute
+  '/api/upload': typeof ApiUploadRoute
+  '/uploads/$filename': typeof UploadsFilenameRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/app': typeof AppRoute
+  '/api/delete': typeof ApiDeleteRoute
+  '/api/state': typeof ApiStateRoute
+  '/api/upload': typeof ApiUploadRoute
+  '/uploads/$filename': typeof UploadsFilenameRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/app'
+  fullPaths:
+    | '/'
+    | '/app'
+    | '/api/delete'
+    | '/api/state'
+    | '/api/upload'
+    | '/uploads/$filename'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/app'
-  id: '__root__' | '/' | '/app'
+  to:
+    | '/'
+    | '/app'
+    | '/api/delete'
+    | '/api/state'
+    | '/api/upload'
+    | '/uploads/$filename'
+  id:
+    | '__root__'
+    | '/'
+    | '/app'
+    | '/api/delete'
+    | '/api/state'
+    | '/api/upload'
+    | '/uploads/$filename'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AppRoute: typeof AppRoute
+  ApiDeleteRoute: typeof ApiDeleteRoute
+  ApiStateRoute: typeof ApiStateRoute
+  ApiUploadRoute: typeof ApiUploadRoute
+  UploadsFilenameRoute: typeof UploadsFilenameRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/app': {
       id: '/app'
       path: '/app'
@@ -58,11 +124,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
+    '/api/delete': {
+      id: '/api/delete'
+      path: '/api/delete'
+      fullPath: '/api/delete'
+      preLoaderRoute: typeof ApiDeleteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/state': {
+      id: '/api/state'
+      path: '/api/state'
+      fullPath: '/api/state'
+      preLoaderRoute: typeof ApiStateRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/upload': {
+      id: '/api/upload'
+      path: '/api/upload'
+      fullPath: '/api/upload'
+      preLoaderRoute: typeof ApiUploadRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/uploads/$filename': {
+      id: '/uploads/$filename'
+      path: '/uploads/$filename'
+      fullPath: '/uploads/$filename'
+      preLoaderRoute: typeof UploadsFilenameRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
@@ -71,6 +158,10 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AppRoute: AppRoute,
+  ApiDeleteRoute: ApiDeleteRoute,
+  ApiStateRoute: ApiStateRoute,
+  ApiUploadRoute: ApiUploadRoute,
+  UploadsFilenameRoute: UploadsFilenameRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
