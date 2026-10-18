@@ -4,6 +4,19 @@ Digital picture frame for the wall and a phone-friendly remote to drive it.
 
 Open **`/`** on a display (TV, tablet, kiosk). Open **`/app`** on a phone or laptop to upload art, pick transitions, and push pieces to the frame — both stay in sync without a full reload.
 
+## Try it live
+
+Deployed on Vercel:
+
+| Surface | URL |
+|---------|-----|
+| **Frame** (display) | [https://dynamic-decor-pi.vercel.app](https://dynamic-decor-pi.vercel.app) |
+| **Controller** (remote) | [https://dynamic-decor-pi.vercel.app/app](https://dynamic-decor-pi.vercel.app/app) |
+
+**Quick test:** open the frame on one device/tab and the controller on another. Upload an image, assign it to the frame, change the transition, and confirm the display updates without a full page reload.
+
+> Uploads on the live demo use ephemeral serverless storage, so gallery data may reset after idle periods or cold starts.
+
 ## Run locally
 
 ```bash
