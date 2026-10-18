@@ -9,31 +9,26 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as AppRouteImport } from './routes/app'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as UploadsFilenameRouteImport } from './routes/uploads/$filename'
-import { Route as ApiUploadRouteImport } from './routes/api/upload'
-import { Route as ApiStateRouteImport } from './routes/api/state'
+import { Route as AppRouteImport } from './routes/app'
 import { Route as ApiDeleteRouteImport } from './routes/api/delete'
+import { Route as ApiStateRouteImport } from './routes/api/state'
+import { Route as ApiUploadRouteImport } from './routes/api/upload'
+import { Route as UploadsFilenameRouteImport } from './routes/uploads/$filename'
 
-const AppRoute = AppRouteImport.update({
-  id: '/app',
-  path: '/app',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const UploadsFilenameRoute = UploadsFilenameRouteImport.update({
-  id: '/uploads/$filename',
-  path: '/uploads/$filename',
+const AppRoute = AppRouteImport.update({
+  id: '/app',
+  path: '/app',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ApiUploadRoute = ApiUploadRouteImport.update({
-  id: '/api/upload',
-  path: '/api/upload',
+const ApiDeleteRoute = ApiDeleteRouteImport.update({
+  id: '/api/delete',
+  path: '/api/delete',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiStateRoute = ApiStateRouteImport.update({
@@ -41,9 +36,14 @@ const ApiStateRoute = ApiStateRouteImport.update({
   path: '/api/state',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ApiDeleteRoute = ApiDeleteRouteImport.update({
-  id: '/api/delete',
-  path: '/api/delete',
+const ApiUploadRoute = ApiUploadRouteImport.update({
+  id: '/api/upload',
+  path: '/api/upload',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const UploadsFilenameRoute = UploadsFilenameRouteImport.update({
+  id: '/uploads/$filename',
+  path: '/uploads/$filename',
   getParentRoute: () => rootRouteImport,
 } as any)
 
@@ -110,13 +110,6 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/app': {
-      id: '/app'
-      path: '/app'
-      fullPath: '/app'
-      preLoaderRoute: typeof AppRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/': {
       id: '/'
       path: '/'
@@ -124,18 +117,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/uploads/$filename': {
-      id: '/uploads/$filename'
-      path: '/uploads/$filename'
-      fullPath: '/uploads/$filename'
-      preLoaderRoute: typeof UploadsFilenameRouteImport
+    '/app': {
+      id: '/app'
+      path: '/app'
+      fullPath: '/app'
+      preLoaderRoute: typeof AppRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/api/upload': {
-      id: '/api/upload'
-      path: '/api/upload'
-      fullPath: '/api/upload'
-      preLoaderRoute: typeof ApiUploadRouteImport
+    '/api/delete': {
+      id: '/api/delete'
+      path: '/api/delete'
+      fullPath: '/api/delete'
+      preLoaderRoute: typeof ApiDeleteRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/state': {
@@ -145,11 +138,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiStateRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/api/delete': {
-      id: '/api/delete'
-      path: '/api/delete'
-      fullPath: '/api/delete'
-      preLoaderRoute: typeof ApiDeleteRouteImport
+    '/api/upload': {
+      id: '/api/upload'
+      path: '/api/upload'
+      fullPath: '/api/upload'
+      preLoaderRoute: typeof ApiUploadRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/uploads/$filename': {
+      id: '/uploads/$filename'
+      path: '/uploads/$filename'
+      fullPath: '/uploads/$filename'
+      preLoaderRoute: typeof UploadsFilenameRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
